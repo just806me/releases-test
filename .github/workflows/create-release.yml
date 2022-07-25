@@ -12,12 +12,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: jwalton/gh-find-current-pr@v1
+      - name: Find Pull Request
+        uses: jwalton/gh-find-current-pr@v1
         id: pr
         with:
           state: closed
-      - run: echo "title - ${RELEASE_TITLE}; tag - ${RELEASE_TAG}"
-        if: success() && steps.pr.outputs.title
-        env:
-          RELEASE_TITLE: ${{ steps.pr.outputs.title.split(' - ')[0] }}
-          RELEASE_TAG: ${{ steps.pr.outputs.title.split(' - ')[1] }}
+      - name: Find release name and tag name
+        uses: jungwinter/split@v2
+        id: split
+        with:
+          msg: ${{ steps.pr.outputs.title }}
+          separator: ' - '
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.split.outputs._0 }}
+          tag_name: ${{ steps.split.outputs._1 }}
+          generate_release_notes: true
