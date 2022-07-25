@@ -20,11 +20,14 @@ jobs:
       - name: Find release name and tag name
         uses: jungwinter/split@v2
         id: split
+        if: success() && steps.pr.outputs.title
         with:
           msg: ${{ steps.pr.outputs.title }}
           separator: ' - '
+          maxsplit: 2
       - name: Create release
         uses: softprops/action-gh-release@v1
+        if: success() && steps.split.outputs._0 && steps.split.outputs._1
         with:
           name: ${{ steps.split.outputs._0 }}
           tag_name: ${{ steps.split.outputs._1 }}
