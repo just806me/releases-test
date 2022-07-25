@@ -16,7 +16,8 @@ jobs:
         id: pr
         with:
           state: closed
-      - run: echo "Your PR is ${PR}"
+      - run: echo "title - ${RELEASE_TITLE}; tag - ${RELEASE_TAG}"
         if: success() && steps.pr.outputs.title
         env:
-          PR: ${{ steps.pr.outputs.title }}
+          RELEASE_TITLE: ${{ steps.pr.outputs.title.split(' - ')[0] }}
+          RELEASE_TAG: ${{ steps.pr.outputs.title.split(' - ')[1] }}
