@@ -19,4 +19,4 @@ jobs:
       - run: echo "Your PR is ${PR}"
         if: success() && steps.pr.outputs.title
         env:
-          PR: ${{ steps.findPr.outputs.pr }}
+          PR: ${{ steps.pr.outputs.title }}
